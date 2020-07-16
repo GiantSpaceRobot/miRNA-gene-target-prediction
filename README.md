@@ -14,7 +14,7 @@ Rscript miRNA-gene-target-prediction-analysis.R TargetScan7.2.txt miRDB.tsv miRW
 * Argument 2: miRDB text output (formatted as .tsv)
 * Argument 3: miRWalk csv output
 * Argument 4: Output prefix
-* Argument 5: Use all gene for GO? yes/no
+* Argument 5: Use all predicted genes for GO? {yes/no}
 
 Note: Selecting "no" for argument 5 will instead use the genes predicted by at least two of the methods.
 

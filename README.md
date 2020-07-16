@@ -1,6 +1,7 @@
 # Predict miRNA gene targets
 
 ## Quickstart
+* Run TargetScan, miRDB, and miRWalk on your favourite miRNA
 * Run the following:
 ```
 git clone https://github.com/GiantSpaceRobot/miRNA-gene-target-prediction.git
@@ -15,7 +16,7 @@ Rscript miRNA-gene-target-prediction-analysis.R miR-335-5p/TargetScan7.2__miR-33
 * Argument 4: Output prefix
 * Argument 5: Use all gene for GO? yes/no
 
-Note: Selecting no will use all genes predicted by at least two of the methods
+Note: Selecting "no" for argument 5 will instead use the genes predicted by at least two of the methods.
 
 ## Contributors
 * Paul Donovan

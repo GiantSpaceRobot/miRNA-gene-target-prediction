@@ -6,7 +6,7 @@
 ```
 git clone https://github.com/GiantSpaceRobot/miRNA-gene-target-prediction.git
 cd miRNA-gene-target-prediction
-Rscript miRNA-gene-target-prediction-analysis.R miR-335-5p/TargetScan7.2__miR-335-5p.predicted_targets.txt miR-335-5p/miRDB.tsv miR-335-5p/miRWalk_miRNA_Targets.csv miR-335-5p/Results/miR-335-5p yes 
+Rscript miRNA-gene-target-prediction-analysis.R TargetScan7.2.txt miRDB.tsv miRWalk_miRNA_Targets.csv My-Output yes 
 ```
 
 ## Parameters

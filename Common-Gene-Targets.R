@@ -71,7 +71,7 @@ my.venn <- venn.diagram(geneLists,
                                          paste0("miR-126-5p\n(",nrow(miR126.genes.df), ")"), 
                                          paste0("miR-335-5p (",nrow(miR335.genes.df), ")")),
                         main.cex = 1.4,
-                        main=paste0("Total no. of genes predicted = ", 
+                        main=paste0("Total no. of miRNA gene targets predicted = ", 
                                     length(all.genes)))
 
 pdf(file = paste0(args[4], "_VennDiagram.pdf"))
@@ -113,16 +113,25 @@ col.order <- hclust(dist(t(dat)))$order
 dat_new <- dat[row.order, col.order] #Re-order maxtrix according to clustering
 df_molten_dat <- melt(as.matrix(dat_new))
 names(df_molten_dat)[c(1:2)] <- c("Genes", "miRNA")
+write.table(x = merged.df, file = paste0(args[4], "_Data-for-Heatmap.tsv"), sep = "\t", quote = F, row.names = F)
 
 # Plot
-pdf(width = 4, height = 15, paste0(args[4], "_Heatmap.pdf"))
+pdf(width = 7, height = 7, paste0(args[4], "_Heatmap.pdf"))
+# ggplot(df_molten_dat, aes(miRNA, Genes))+
+#   geom_tile(aes(fill = value), colour = "white", size=0) +
+#   scale_fill_gradient(low = "white", high = "blue") +
+#   #theme_minimal() +
+#   labs(x = "", y = "") +
+#   theme(legend.position = "none", axis.text.y = element_text(size=1)) +
+#   #theme(legend.position = "none", axis.text.y = element_blank()) +
+#   ggtitle("Clustered miRNA Gene Target Prediction Heatmap")
 ggplot(df_molten_dat, aes(miRNA, Genes))+
-  geom_tile(aes(fill = value), colour = "white", size=0.05) +
-  scale_fill_gradient(low = "white", high = "darkorchid1") +
+  geom_tile(aes(fill = value)) +
+  scale_fill_gradient(low = "white", high = "blue") +
   #theme_minimal() +
   labs(x = "", y = "") +
-  theme(legend.position = "none", axis.text.y = element_text(size=2)) +
-  #theme(legend.position = "none", axis.text.y = element_blank()) +
+  #theme(legend.position = "none", axis.text.y = element_text(size=1)) +
+  theme(legend.position = "none", axis.text.y = element_blank()) +
   ggtitle("Clustered miRNA Gene Target Prediction Heatmap")
 dev.off()
 

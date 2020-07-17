@@ -23,6 +23,7 @@ library("gplots")
 library("dplyr")
 library("stringr")
 library("reshape2")
+library("enrichR")
 futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger") # Suppress VennDiagram messages/log file generation
 
 ### Use command line arguments
@@ -88,12 +89,66 @@ a <- venn(geneLists, show.plot=FALSE)
 # We can store the intersections in a new object named inters
 inters <- attr(a,"intersections")
 
-#my.gene.list <- c(inters$`TargetScan.unique.as.character.targetscan.Target.gene..:miRDB.unique.as.character.miRDB.Gene.Symbol..`, 
-#                    inters$`TargetScan.unique.as.character.targetscan.Target.gene..:miRWalk.unique.as.character.miRWalk.genesymbol..`,
-#                    inters$`TargetScan.unique.as.character.targetscan.Target.gene..:miRDB.unique.as.character.miRDB.Gene.Symbol..:miRWalk.unique.as.character.miRWalk.genesymbol..`,
-#                    inters$`miRDB.unique.as.character.miRDB.Gene.Symbol..:miRWalk.unique.as.character.miRWalk.genesymbol..`)
+# Get genes common to all three miRNAs
+my.gene.list <- c(inters$`miR-16-5p.V1:miR-126-5p.V1:miR-335-5p.V1`)
 
+### GO Analysis
+dbs <- c("GO_Molecular_Function_2018", 
+         "GO_Cellular_Component_2018", 
+         "GO_Biological_Process_2018",
+         "WikiPathways_2019_Human",
+         "KEGG_2019_Human")
+my.enrichR <- enrichr(my.gene.list, databases = dbs)
 
+my.summary <- printEnrich(data = my.enrichR, 
+                          file = paste0(my.output, "_Summary.tsv"), 
+                          sep = "\t", 
+                          columns = c(1:9))
+
+write.table(x = my.enrichR[["GO_Molecular_Function_2018"]], file = paste0(my.output, "_GO_Molecular_Function_2018.tsv"))
+write.table(x = my.enrichR[["GO_Cellular_Component_2018"]], file = paste0(my.output, "_GO_Cellular_Component_2018.tsv"))
+write.table(x = my.enrichR[["GO_Biological_Process_2018"]], file = paste0(my.output, "_GO_Biological_Process_2018.tsv"))
+write.table(x = my.enrichR[["WikiPathways_2019_Human"]], file = paste0(my.output, "_WikiPathways_2019_Human.tsv"))
+write.table(x = my.enrichR[["KEGG_2019_Human"]], file = paste0(my.output, "_KEGG_2019_Human.tsv"))
+
+df.mf <- my.enrichR[["GO_Molecular_Function_2018"]]
+df.cc <- my.enrichR[["GO_Cellular_Component_2018"]]
+df.bp <- my.enrichR[["GO_Biological_Process_2018"]]
+df23.WikiPathways <- my.enrichR[["WikiPathways_2019_Human"]]
+df24.KEGG <- my.enrichR[["KEGG_2019_Human"]]
+
+df.to.plot <- function(my.dataframe, analysis = "") {
+  sub.df <- head(my.dataframe, n = 10)
+  sub.df <- sub.df[order(-sub.df$Adjusted.P.value),]
+  sub.df$log10.of.padj <- abs(log10(sub.df$Adjusted.P.value))
+  sub.df <- subset(sub.df, log10.of.padj>1.3)
+  number.of.terms <- nrow(sub.df)
+  if(number.of.terms<1){
+    return(plot.new())
+  } else {
+    level_order <- as.list(sub.df$Term) # Create factor of terms to reorder ggplot2
+    my.plot <- ggplot(data=sub.df, aes(x=factor(Term, level = level_order), y=log10.of.padj)) +
+      geom_bar(stat="identity", fill="darkred") +  #steelblue
+      theme(axis.text.y=element_text(size=10))+
+      scale_x_discrete(name = "", 
+                       labels=function(x) sub("(", "\n(", x, fixed=TRUE)) + # Add newline to labels with GO numbers
+      scale_y_continuous(name = "-Log10 of Adjusted P value") +
+      labs(title=analysis) +
+      coord_flip()
+    return(my.plot)
+  }
+}
+
+pdf(height = 5, file = paste0(my.output, "_EnrichR_Barplots.pdf"))
+df.to.plot(df.mf, "GO Molecular Function 2018")
+df.to.plot(df.cc, "GO Cellular Component 2018")
+df.to.plot(df.bp, "GO Biological Process 2018")
+df.to.plot(df23.WikiPathways, "WikiPathways 2019 Human")
+df.to.plot(df24.KEGG, "KEGG 2019 Human")
+dev.off()
+
+                
+##### Heatmap
 ### Create binary dataframe based on yes/no gene target prediction for each miRNA
 miR16.genes.df$miR.16.5p <- 1
 miR126.genes.df$miR.126.5p <- 1

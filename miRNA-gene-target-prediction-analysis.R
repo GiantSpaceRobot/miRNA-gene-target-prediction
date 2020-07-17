@@ -65,7 +65,11 @@ geneLists <- c("TargetScan" = my.targetscan.genes.df,
                "miRWalk" = my.miRWalk.genes.df)
 
 total.no.of.features <- unique(c(my.targetscan.genes, my.miRDB.genes, my.miRWalk.genes))
-
+write.table(x = total.no.of.features, file = paste0(my.output, "_all-predicted-gene-targets.tsv"), 
+            sep = "\t", 
+            quote = F, 
+            row.names = F, 
+            col.names = F)
 
 my.venn <- venn.diagram(geneLists, 
                         filename = NULL,

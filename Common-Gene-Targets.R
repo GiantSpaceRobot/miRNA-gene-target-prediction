@@ -39,16 +39,6 @@ miR335.genes.df <- read.csv(args[3],
                     sep = ",", 
                     header = F)
 
-# miR16.genes.df <- read.csv("/home/paul/Documents/Acute_Ischaemic_Stroke/miR-16-5p/miR-16-5p_all-predicted-gene-targets.tsv",
-#                        sep = "\t",
-#                        header = F)
-# miR126.genes.df <- read.csv("/home/paul/Documents/Acute_Ischaemic_Stroke/miR-126-5p/miR-126-5p_all-predicted-gene-targets.tsv",
-#                   sep = "\t",
-#                   header = F)
-# miR335.genes.df <- read.csv("/home/paul/Documents/Acute_Ischaemic_Stroke/miR-335-5p/miR-335-5p_all-predicted-gene-targets.tsv",
-#                     sep = ",",
-#                     header = F)
-
 my.output <- args[4]
 
 # Venn Diagram

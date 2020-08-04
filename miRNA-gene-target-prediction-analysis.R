@@ -38,16 +38,6 @@ miRWalk <- read.csv(args[3],
                     header = T)
 
 
-# targetscan <- read.csv("/home/paul/Documents/Acute_Ischaemic_Stroke/miR-126-5p/TargetScan7.2__miR-126-5p.predicted_targets.txt",
-#                        sep = "\t", 
-#                        header = T)
-# miRDB <- read.csv("/home/paul/Documents/Acute_Ischaemic_Stroke/miR-126-5p/miRDB.tsv", 
-#                   sep = "\t", 
-#                   header = T)
-# miRWalk <- read.csv("/home/paul/Documents/Acute_Ischaemic_Stroke/miR-126-5p/miRWalk_miRNA_Targets.csv", 
-#                     sep = ",", 
-#                     header = T)
-
 my.output <- args[4]
 
 # Get unique genes predicted by each method
